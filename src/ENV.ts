@@ -21,12 +21,6 @@ export const ENV = {
 	API_DESC: process.env.API_DESC,
 	API_VERSION: process.env.API_VERSION,
 
-	// AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-	// AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-	// AWS_REGION: process.env.AWS_REGION,
-	// AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
-	// AWS_PREFIX_URL: process.env.AWS_PREFIX_URL,
-
 	SALT_ROUNDS: +process.env.SALT_ROUNDS,
 	JWT_SECRET: process.env.JWT_SECRET,
 	REFRESH_JWT_SECRET: process.env.REFRESH_JWT_SECRET,
@@ -35,7 +29,7 @@ export const ENV = {
 	IMAGE_MAX_SIZE: +process.env.IMAGE_MAX_SIZE || 2097152,
 
 	postGreDB: {
-		type: 'postgres',
+		type: 'mysql',
 		host: process.env.TYPEORM_HOST,
 		port: +process.env.TYPEORM_PORT,
 		username: process.env.TYPEORM_USERNAME,
@@ -48,7 +42,7 @@ export const ENV = {
 };
 
 export const ormConfig: any = {
-	type: 'postgres',
+	type: 'mysql',
 	host: ENV.postGreDB.host,
 	port: +ENV.postGreDB.port,
 	username: ENV.postGreDB.username,
