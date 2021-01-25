@@ -13,31 +13,31 @@ const APP_TITLE = ENV.API_TITLE;
 const API_DESC = ENV.API_DESC;
 const API_VERSION = ENV.API_VERSION;
 
-const fileTransport = !ENV.isDevelopment
-	? [
-			new transports.File({
-				format: format.combine(
-					utilities.format.nestLike(),
-					format.json(),
-					format.timestamp()
-				),
-				filename: ENV.logFilePath,
-			}),
-	  ]
-	: [];
+// const fileTransport = !ENV.isDevelopment
+// 	? [
+// 			new transports.File({
+// 				format: format.combine(
+// 					utilities.format.nestLike(),
+// 					format.json(),
+// 					format.timestamp()
+// 				),
+// 				filename: ENV.logFilePath,
+// 			}),
+// 	  ]
+// 	: [];
 
 const appOptions: NestApplicationOptions = {
 	cors: true,
 	logger: WinstonModule.createLogger({
 		exitOnError: true,
 
-		transports: [
-			new transports.Console({
-				// silent: true,
-				format: format.combine(utilities.format.nestLike()),
-			}),
-			...fileTransport,
-		],
+		// transports: [
+		// 	new transports.Console({
+		// 		// silent: true,
+		// 		format: format.combine(utilities.format.nestLike()),
+		// 	}),
+		// 	...fileTransport,
+		// ],
 	}),
 };
 
