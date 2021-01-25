@@ -1,10 +1,12 @@
+import { Scope } from "typeorm-scope";
+
 import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { BaseEntity } from "../../base/base.entity";
 
+@Scope<Crud>([(qb, alias) => qb.andWhere(`${alias}.deletedAt IS NULL`)])
 @Entity("cruds")
-export class Crud {
-    @PrimaryGeneratedColumn()
-    id: number;
-
+export class Crud extends BaseEntity {
+   
     @Column({nullable:true})
     firstName: string;
 
@@ -22,10 +24,8 @@ export class Crud {
 
     @Column({nullable:true})
     age: string;
-
-    @Column({nullable:true})
-    createdAt: Date;
-
-    @Column({nullable:true})
-    updatedAt:   Date;
+    
+    constructor() {
+        super();
+      }
 }
