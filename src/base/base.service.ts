@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindAllSuccessResponse } from 'src/@responses/findAllSuccess.response';
+import { CrudDto } from 'src/modules/dtos/crudDto';
 import { paginationOptions } from 'src/utils/paginate.util';
+import { IServerFileUploaderReturn, ServerFileUploader } from 'src/utils/serverFileHandler.util';
 import { FindManyOptions, Raw, Repository } from 'typeorm';
-// import { Crud } from './crud.entity';
 
 @Injectable()
 export abstract class BaseService<Entity> extends Repository<Entity> {
@@ -16,8 +17,7 @@ export abstract class BaseService<Entity> extends Repository<Entity> {
   }
 
    async findAllWithPaginate(options: any, relations?: string[]): Promise<any> {
-    console.log("call from findAllWithPaginate");
-
+    console.log("call from find All With Paginate");
     const searchTerm = options.searchTerm;
     const searchAttributes = options.searchAttributes || ["name"];
     delete options.searchAttributes;
@@ -107,4 +107,30 @@ export abstract class BaseService<Entity> extends Repository<Entity> {
       });
     }
   }
+
+  async insertOneWithSingleImage(data: any): Promise<any> {
+    console.log("call from Base Service - insertOneWithSingleImage");
+    const newPayload = { ...data };
+    const payload1 = await this.repo.save(newPayload);
+    // return payload1;
+  
+    if (data.formImage) {
+      // upload newfile to server & delete from local
+      const uploadedFile: IServerFileUploaderReturn = await ServerFileUploader(
+        data.formImage
+      );
+      if (uploadedFile.success) {
+        // console.log(data.formImage);
+        // return 
+        // data.image = data.formImage = uploadedFile.storedFiles[0];
+        data.image = data?.formImage?.path || "" ;
+      }
+    }
+    delete data.formImage;
+    data.id = payload1.id;
+    const payload= await this.repo.save(data)
+    return payload;
+  }
+ 
+  
 }

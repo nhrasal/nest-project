@@ -1,7 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-// import { CrudService } from './crud.service';
 
-@Controller('crud')
 export abstract class BaseController<CreateDto, UpdateDto> {
   modelService: any;
   modelRelations: any;

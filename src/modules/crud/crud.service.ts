@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/base/base.service';
+import { IServerFileUploaderReturn, ServerFileUploader } from 'src/utils/serverFileHandler.util';
 import { Repository } from 'typeorm';
 import { Crud } from './crud.entity';
 
@@ -12,4 +13,6 @@ export class CrudService extends BaseService<Crud> {
 	) {
 		super(_repository);
 	}
+	
+	
 }
