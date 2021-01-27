@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindAllSuccessResponse } from 'src/@responses/findAllSuccess.response';
 import { CrudDto } from 'src/modules/dtos/crudDto';
 import { paginationOptions } from 'src/utils/paginate.util';
 import { IServerFileUploaderReturn, ServerFileUploader } from 'src/utils/serverFileHandler.util';
-import { FindManyOptions, Raw, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Raw, Repository } from 'typeorm';
 
 @Injectable()
 export abstract class BaseService<Entity> extends Repository<Entity> {
@@ -123,13 +123,24 @@ export abstract class BaseService<Entity> extends Repository<Entity> {
         // console.log(data.formImage);
         // return 
         // data.image = data.formImage = uploadedFile.storedFiles[0];
-        data.image = data?.formImage?.path || "" ;
+        data.image = ''+data?.formImage?.path || "" ;
       }
     }
     delete data.formImage;
     data.id = payload1.id;
     const payload= await this.repo.save(data)
     return payload;
+  }
+  async findById(id: string, relations?: string[]): Promise<any> {
+    console.log("call from base service  : findById>>>>>>>>>>>>>>>>>>>>", id);
+    // return await this.repo.findOne(id);
+    
+    const options: FindOneOptions = {};
+    if (relations) {
+      options.relations = relations;
+    }
+    const data = await this.repo.findOne(id, options);
+    return data || new NotFoundException("no data found with this id");
   }
  
   

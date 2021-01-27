@@ -13,6 +13,9 @@ export class CrudService extends BaseService<Crud> {
 	) {
 		super(_repository);
 	}
+	async findOneSomething(id:any): Promise<any>{
+		return this._repository.findOne(id)
+	}
 	
 	
 }

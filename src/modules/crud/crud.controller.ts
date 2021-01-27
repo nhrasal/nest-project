@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { BaseController } from 'src/base/base.controller';
@@ -8,14 +8,9 @@ import { CrudDto } from '../dtos/crudDto';
 import { CrudService } from './crud.service';
 
 @Controller('crud')
-export class CrudController extends BaseController<{}, {}> {
+export class CrudController extends BaseController<CrudDto, {}> {
   constructor(private readonly service: CrudService) {
     super(service, []);
-  }
-  @Get()
-  async findAll(@Query() query: any): Promise<any> {
-    query.searchAttributes = ["name", "slug"];
-    return await this.service.findAllWithPaginate(query, this.modelRelations);
   }
   @Post()
   @ApiConsumes("multipart/form-data")
@@ -32,7 +27,7 @@ export class CrudController extends BaseController<{}, {}> {
     @UploadedFile() formImage,
     @Body() data: CrudDto,
   ): Promise<any> {
-    data = await fixNullPrototype(data);
+     data = await fixNullPrototype(data);
     data.formImage = formImage;
     return await this.service.insertOneWithSingleImage(data);
   }
