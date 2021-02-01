@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindAllSuccessResponse } from 'src/@responses/findAllSuccess.response';
 import { CrudDto } from 'src/modules/dtos/crudDto';
 import { paginationOptions } from 'src/utils/paginate.util';
-import { IServerFileUploaderReturn, ServerFileUploader } from 'src/utils/serverFileHandler.util';
+import { IServerFileUploaderReturn, ServerFileRemover, ServerFileUploader } from 'src/utils/serverFileHandler.util';
 import { FindManyOptions, FindOneOptions, Raw, Repository } from 'typeorm';
 
 @Injectable()
@@ -107,6 +107,7 @@ export abstract class BaseService<Entity> extends Repository<Entity> {
       });
     }
   }
+  
 
   async insertOneWithSingleImage(data: any): Promise<any> {
     console.log("call from Base Service - insertOneWithSingleImage");
@@ -141,6 +142,34 @@ export abstract class BaseService<Entity> extends Repository<Entity> {
     }
     const data = await this.repo.findOne(id, options);
     return data || new NotFoundException("no data found with this id");
+  }
+
+
+  async updateOneWithSingleImage(id: string, data: any) {
+    data.id = id;
+    const payload = { ...data };
+    await this.repo.save(payload);
+    if (data.formImage) {
+      // upload newfile to server & delete from local
+      {
+        // const uploadedFile: IServerFileUploaderReturn = await ServerFileUploader(
+        //   data.formImage
+        // );
+
+        // if (uploadedFile.success) {
+        //   data.image = data.thumb = uploadedFile.storedFiles[0];
+        // }
+        data.image = ''+data?.formImage?.path || "" ;
+      }
+      {
+        //  delete from server
+        const oldData: any = await this.repo.findOne(id);
+        oldData?.image ? ServerFileRemover(oldData.image) : "";
+      }
+    }
+    delete data.formImage;
+    // return 'data'; 
+    return await this.repo.save(data); 
   }
  
   

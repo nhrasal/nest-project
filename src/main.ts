@@ -56,6 +56,7 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, options);
 	SwaggerModule.setup('/docs', app, document);
 	app.useGlobalPipes(new ValidationPipe());
+	
 	await app.listen(PORT);
 	console.log(`Application is running on: ${await app.getUrl()}`);
 }
